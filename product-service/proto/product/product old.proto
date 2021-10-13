@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package product;
+
+service ProductService {
+  rpc FindAvailableProduct(ProductRequest) returns (ProductResponse) {}
+}
+
+message Product {
+  string product_id = 1;
+  string name = 2;
+  string size = 3;
+  string colour = 4;
+  double price = 5;
+  int32 quantity = 6;
+  string description = 7;
+}
+
+message ProductRequest {
+  repeated Product Prod = 1;
+}
+
+message ProductResponse {
+  bool Flag = 1;
+  Product Prod = 2;
+  repeated Product Prods = 3;
+}

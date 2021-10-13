@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+      package order;
+      
+
+      service OrderService {
+        rpc AddOrder(Order) returns (OrderResponse) {}
+        rpc GetOrderList(OrderRequest) returns (OrderResponse) {}
+        rpc GetOrderByID(OrderID) returns (OrderResponse) {}
+        rpc UpdateOrder(OrderUpdateRequest) returns (OrderUpdateResponse) {}
+        rpc DeleteOrder(OrderID) returns (DeleteOrderResponse) {}
+      }
+      
+      message Order {
+        string order_id = 1;
+        string product_id = 2;
+        string cust_id = 3;
+        double amount = 4;
+        string date_created = 5;
+      }
+      
+     message OrderRequest {}
+
+     /* message ProductRequest {
+        repeated Product Prod = 1;
+      }
+    */
+
+      message OrderResponse {
+        bool Flag = 1;
+        Order Oder = 2;
+        repeated Order Oders = 3;
+      }
+
+
+     message OrderID {
+       string order_id = 1;
+     }
+
+
+     message OrderUpdateRequest {
+       string order_id = 1;
+       double amount = 2;
+     }
+
+     message OrderUpdateResponse {
+       bool updated = 1;
+     }     
+
+     message  DeleteOrderResponse {
+       bool deleted = 1;
+     }

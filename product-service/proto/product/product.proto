@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+      package product;
+      
+      service ProductService {
+        rpc AddProduct(Product) returns (ProductResponse) {}
+        rpc GetProductList(ProductRequest) returns (ProductResponse) {}
+        rpc GetProductByID(ProductID) returns (ProductResponse) {}
+        rpc UpdateProduct(UpdateRequest) returns (UpdateResponse) {}
+        rpc DeleteProduct(ProductID) returns (DeleteResponse) {}
+      }
+      
+      message Product {
+        string product_id = 1;
+        string name = 2;
+        string size = 3;
+        string colour = 4;
+        double price = 5;
+        int32 quantity = 6;
+        string description = 7;
+      }
+      
+     message ProductRequest {}
+
+     /* message ProductRequest {
+        repeated Product Prod = 1;
+      }
+    */
+
+      message ProductResponse {
+        bool Flag = 1;
+        Product Prod = 2;
+        repeated Product Prods = 3;
+      }
+
+
+     message ProductID {
+       string productID = 1;
+     }
+
+
+     message UpdateRequest {
+       string productID = 1;
+       double price = 2;
+     }
+
+     message UpdateResponse {
+       bool updated = 1;
+     }     
+
+     message  DeleteResponse {
+       bool deleted = 1;
+     }

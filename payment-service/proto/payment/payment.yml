@@ -1,0 +1,23 @@
+--- 
+    config_version: 3
+    http: 
+      rules: 
+        - 
+          body: "*"
+          post: /v1/payment/addpayment
+          selector: payment.PaymentService.AddPayment
+        -           
+          body: "*"
+          patch: /v1/payment/updatepayment
+          selector: payment.PaymentService.UpdatePayment
+        - 
+          delete: /v1/payment/deletepayment/{payment_id}
+          selector: payment.PaymentService.DeletePayment
+        - 
+          get: /v1/payment/getpaymentbyid/{payment_id}
+          selector: payment.PaymentService.GetPaymentByID
+        - 
+          get: /v1/payment/getpaymentlist
+          selector: payment.PaymentService.GetPaymentList
+    type: google.api.Service
+    

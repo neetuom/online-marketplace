@@ -1,0 +1,394 @@
+{
+    "version": 2,
+    "name": "Online-marketplace API Gateway",
+    "port": 8000,
+    "cache_ttl": "3600s",
+    "timeout": "3s",
+    "plugin": {
+        "pattern": ".so",
+        "folder": "./plugin/"
+    },
+    "extra_config": {
+      "github_com/devopsfaith/krakend-gologging": {
+        "level": "WARNING",
+        "prefix": "[KRAKEND]",
+        "syslog": false,
+        "stdout": true,
+        "format": "default"
+      }
+    },
+    "endpoints": [
+      {
+        "endpoint": "/v1/product/addproduct",
+        "method": "POST",
+        "backend": [          
+          {            
+            "url_pattern": "/v1/product/addproduct",
+            "method": "POST",
+            "host": [ "product-service:60060" ],
+            "group": "product",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },      
+      {
+        "endpoint": "/v1/product/deleteproduct/{productID}",
+        "method": "DELETE",
+        "backend": [
+          {                     
+            "url_pattern": "/v1/product/deleteproduct/{productID}",   
+            "method": "DELETE",
+            "host": [ "product-service:60060" ],
+            "group": "product",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/product/getproductbyid/{productID}",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/product/getproductbyid/{productID}",
+            "method": "GET",   
+            "host": [ "product-service:60060" ],         
+            "group": "product",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/product/getproductlist",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/product/getproductlist",
+            "method": "GET",
+            "host": [ "product-service:60060" ],
+            "is_collection": true,
+            "mapping": {
+               "collection": "product"
+            },
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/product/updateproduct",
+        "method": "PATCH",
+        "backend": [
+          {
+            "url_pattern": "/v1/product/updateproduct",
+            "method": "PATCH",
+            "host": [ "product-service:60060" ],
+            "group": "product",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/customer/addcustomer",
+        "method": "POST",
+        "backend": [
+          {
+            "url_pattern": "/v1/customer/addcustomer",
+            "method": "POST",
+            "host": [ "customer-service:60061" ],
+            "group": "customer",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/customer/deletecustomer/{cust_id}",
+        "method": "DELETE",
+        "backend": [
+          {
+            "url_pattern": "/v1/customer/deletecustomer/{cust_id}",
+            "method": "DELETE",
+            "host": [ "customer-service:60061" ],
+            "group": "customer",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/customer/getcustomerbyid/{cust_id}",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/customer/getcustomerbyid/{cust_id}",
+            "method": "GET",    
+            "host": [ "customer-service:60061" ],        
+            "group": "customer",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/customer/getcustomerlist",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/customer/getcustomerlist",
+            "method": "GET",
+            "host": [ "customer-service:60061" ],
+            "is_collection": true,
+            "mapping": {
+               "collection": "customer"
+            },
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/customer/updatecustomer",
+        "method": "PATCH",
+        "backend": [
+          {
+            "url_pattern": "/v1/customer/updatecustomer",
+            "method": "PATCH",
+            "host": [ "customer-service:60061" ],
+            "group": "customer",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/payment/addpayment",
+        "method": "POST",
+        "backend": [
+          {
+            "url_pattern": "/v1/payment/addpayment",
+            "method": "POST",
+            "host": [ "payment-service:60062" ],
+            "group": "payment",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/payment/deletepayment/{payment_id}",
+        "method": "DELETE",
+        "backend": [
+          {
+            "url_pattern": "/v1/payment/deletepayment/{payment_id}",
+            "method": "DELETE",
+            "host": [ "payment-service:60062" ],
+            "group": "payment",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/payment/getpaymentbyid/{payment_id}",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/payment/getpaymentbyid/{payment_id}",
+            "method": "GET",
+            "host": [ "payment-service:60062" ],
+            "group": "payment",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/payment/getpaymentlist",
+        "method": "GET",
+        "backend": [
+          {            
+            "url_pattern": "/v1/payment/getpaymentlist",
+            "method": "GET",
+            "host": [ "payment-service:60062" ],
+            "is_collection": true,
+            "mapping": {
+              "collection": "payment"
+            },
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/payment/updatepayment",
+        "method": "PATCH",
+        "backend": [
+          {
+            "url_pattern": "/v1/payment/updatepayment",
+            "method": "PATCH",
+            "host": [ "payment-service:60062" ],
+            "group": "payment",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/order/addorder",
+        "method": "POST",
+        "backend": [
+          {
+            "url_pattern": "/v1/order/addorder",
+            "method": "POST",
+            "host": [ "order-service:60063" ],
+            "group": "order",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/order/deleteorder/{order_id}",
+        "method": "DELETE",
+        "backend": [
+          {
+            "url_pattern": "/v1/order/deleteorder/{order_id}",
+            "method": "DELETE",
+            "host": [ "order-service:60063" ],
+            "group": "order",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/order/getorderbyid/{order_id}",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/order/getorderbyid/{order_id}",
+            "method": "GET",
+            "host": [ "order-service:60063" ],
+            "group": "order",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/order/getorderlist",
+        "method": "GET",
+        "backend": [
+          {
+            "url_pattern": "/v1/order/getorderlist",
+            "method": "GET",
+            "host": [ "order-service:60063" ],
+            "is_collection": true,
+            "mapping": {
+              "collection": "order"
+            },
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      },
+      {
+        "endpoint": "/v1/order/updateorder",
+        "method": "PATCH",
+        "backend": [
+          {
+            "url_pattern": "/v1/order/updateorder",
+            "method": "PATCH",
+            "host": [ "order-service:60063" ],
+            "group": "order",
+            "extra_config": {
+                "github.com/devopsfaith/krakend/transport/http/client/executor": {
+                    "name": "grpc-gateway",
+                    "endpoints": [ "product-service:60060", "customer-service:60061" ,"payment-service:60062","order-service:60063" ]
+                }
+            }    
+          }
+        ]
+      }
+    ]
+  }

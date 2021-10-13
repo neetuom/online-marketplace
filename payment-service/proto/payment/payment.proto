@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+      package payment;
+      
+
+      service PaymentService {
+        rpc AddPayment(Payment) returns (PaymentResponse) {}
+        rpc GetPaymentList(PaymentRequest) returns (PaymentResponse) {}
+        rpc GetPaymentByID(PaymentID) returns (PaymentResponse) {}
+        rpc UpdatePayment(PaymentUpdateRequest) returns (PaymentUpdateResponse) {}
+        rpc DeletePayment(PaymentID) returns (DeletePaymentResponse) {}
+      }
+      
+      message Payment {
+        string payment_id = 1;
+        string order_id = 2;
+        string order_date = 3;
+        string invoice_number = 4;
+        string invoice_date = 5;
+        string payment_method = 6;
+        string tracking_id = 7;
+        double grand_total = 8;
+      }
+      
+     message PaymentRequest {}
+
+     /* message ProductRequest {
+        repeated Product Prod = 1;
+      }
+    */
+
+      message PaymentResponse {
+        bool Flag = 1;
+        Payment Pymt = 2;
+        repeated Payment Pymts = 3;
+      }
+
+
+     message PaymentID {
+       string payment_id = 1;
+     }
+
+
+     message PaymentUpdateRequest {
+       string payment_id = 1;
+       double grand_total = 2;
+     }
+
+     message PaymentUpdateResponse {
+       bool updated = 1;
+     }     
+
+     message  DeletePaymentResponse {
+       bool deleted = 1;
+     }

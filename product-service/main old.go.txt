@@ -1,0 +1,78 @@
+package main
+
+import (
+	"context"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
+	"product-service.com/product-service/models"
+	prodProto "product-service.com/product-service/proto/product"
+)
+
+const (
+	port = ":60060"
+)
+
+type Product struct {
+	Products []*prodProto.Product
+}
+
+func (prod *Product) FindAvailableProduct(ctx context.Context, req *prodProto.ProductRequest) (*prodProto.ProductResponse, error) {
+	log.Printf("FindAvailableProduct Method - Started")
+
+	session := models.SessionSetUp()
+
+	product := prod.Products
+
+	m := map[string]interface{}{}
+
+	iter := session.Query("select * from Product").Iter()
+
+	for iter.MapScan(m) {
+		product = append(prod.Products, &prodProto.Product{
+			ProductId:   m["product_id"].(string),
+			Name:        m["name"].(string),
+			Size:        m["size"].(string),
+			Colour:      m["colour"].(string),
+			Price:       m["price"].(float64),
+			Quantity:    int32(m["quantity"].(int)), // Product table have int value,so converting it to go 32 bit integer.
+			Description: m["description"].(string),
+		})
+
+		log.Printf(m["product_id"].(string))
+		m = map[string]interface{}{}
+	}
+
+	//prod := &products
+
+	response := &prodProto.ProductResponse{Flag: true, Prods: product}
+
+	log.Printf("FindAvailableProduct Method - Ended")
+
+	return response, nil
+}
+
+func main() {
+	log.Printf("product-service - main function - started")
+
+	// Set-up our gRPC server.
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	srv := grpc.NewServer()
+
+	prod := &Product{}
+
+	/* Register our service with the gRPC server, this will tie our implementation into the auto-generated interface code for our protobuf definition. */
+
+	prodProto.RegisterProductServiceServer(srv, prod)
+
+	log.Println("Running on port:", port)
+	if err := srv.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+
+	log.Printf("product-service - main function - ended")
+}

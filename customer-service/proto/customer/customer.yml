@@ -1,0 +1,23 @@
+--- 
+    config_version: 3
+    http: 
+      rules: 
+        - 
+          body: "*"
+          post: /v1/customer/addcustomer
+          selector: customer.CustomerService.AddCustomer
+        -           
+          body: "*"
+          patch: /v1/customer/updatecustomer
+          selector: customer.CustomerService.UpdateCustomer
+        - 
+          delete: /v1/customer/deletecustomer/{cust_id}
+          selector: customer.CustomerService.DeleteCustomer
+        - 
+          get: /v1/customer/getcustomerbyid/{cust_id}
+          selector: customer.CustomerService.GetCustomerByID
+        - 
+          get: /v1/customer/getcustomerlist
+          selector: customer.CustomerService.GetCustomerList
+    type: google.api.Service
+    

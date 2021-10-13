@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+      package customer;
+      
+      import "google/protobuf/timestamp.proto";
+
+      service CustomerService {
+        rpc AddCustomer(Customer) returns (CustomerResponse) {}
+        rpc GetCustomerList(CustomerRequest) returns (CustomerResponse) {}
+        rpc GetCustomerByID(CustomerID) returns (CustomerResponse) {}
+        rpc UpdateCustomer(CustomerUpdateRequest) returns (CustomerUpdateResponse) {}
+        rpc DeleteCustomer(CustomerID) returns (DeleteCustomerResponse) {}
+      }
+      
+      message Customer {
+        string cust_id = 1;
+        string fullname = 2;
+        string address = 3;
+        int64 mobile = 4;
+        string email = 5;
+        string registered_on = 6;
+      }
+      
+     message CustomerRequest {}
+
+     /* message ProductRequest {
+        repeated Product Prod = 1;
+      }
+    */
+
+      message CustomerResponse {
+        bool Flag = 1;
+        Customer Cust = 2;
+        repeated Customer Custs = 3;
+      }
+
+
+     message CustomerID {
+       string cust_id = 1;
+     }
+
+
+     message CustomerUpdateRequest {
+       string cust_id = 1;
+       int64 mobile = 2;
+     }
+
+     message CustomerUpdateResponse {
+       bool updated = 1;
+     }     
+
+     message  DeleteCustomerResponse {
+       bool deleted = 1;
+     }

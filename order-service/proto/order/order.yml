@@ -1,0 +1,23 @@
+--- 
+    config_version: 3
+    http: 
+      rules: 
+        - 
+          body: "*"
+          post: /v1/order/addorder
+          selector: order.OrderService.AddOrder
+        -           
+          body: "*"
+          patch: /v1/order/updateorder
+          selector: order.OrderService.UpdateOrder
+        - 
+          delete: /v1/order/deleteorder/{order_id}
+          selector: order.OrderService.DeleteOrder
+        - 
+          get: /v1/order/getorderbyid/{order_id}
+          selector: order.OrderService.GetOrderByID
+        - 
+          get: /v1/order/getorderlist
+          selector: order.OrderService.GetOrderList
+    type: google.api.Service
+    

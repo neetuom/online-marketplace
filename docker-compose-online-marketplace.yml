@@ -1,0 +1,130 @@
+version: '3'
+services:
+   # Cassandra service
+   cassandra-node1:
+      image: cassandra:3.11.6
+      container_name: cassandra-service
+      # Network for the nodes to communicate
+      networks:
+         - online-marketplace-network
+      # volumes
+      volumes:
+         - ./cassandra_data:/var/lib/cassandra
+      # Docker constainer environment variable
+      environment:
+         - CASSANDRA_CLUSTER_NAME=Test Cluster
+         - CASSANDRA_SEEDS=cassandra-node1
+         - CASSANDRA_PASSWORD_SEEDER=yes
+         - CASSANDRA_PASSWORD=password
+      # Exposing ports for inter cluste communication
+      expose:
+         - 7000  # JMX
+         - 7001  # cluster communication
+         - 7199  # cluster communication (SSL)
+         - 9042  # native protocol clients
+         - 9160  # thrift clients
+      # ports
+      ports:
+         - "9042:9042"
+      # Restart policy
+      restart: always
+      # Cassandra ulimt recommended settings
+      ulimits:
+         memlock: -1
+         nproc: 32768
+         nofile: 100000
+
+   #  product-service    
+   product-service:
+      image: product-service:1
+      container_name: product-service
+      build: ./product-service
+      ports: 
+         - 60060:60060
+      restart: on-failure
+      depends_on:
+         - cassandra-node1
+      networks:
+         - online-marketplace-network
+
+   #  customer-service    
+   customer-service:
+      image: customer-service:1
+      container_name: customer-service
+      build: ./customer-service
+      ports: 
+         - "60061:60061"
+      restart: on-failure
+      depends_on:
+         - cassandra-node1
+      networks:
+         - online-marketplace-network
+
+   #  payment-service    
+   payment-service:
+      image: payment-service:1
+      container_name: payment-service
+      build: ./payment-service
+      ports: 
+         - 60062:60062
+      restart: on-failure
+      depends_on:
+         - cassandra-node1
+      networks:
+         - online-marketplace-network
+
+   #  payment-service    
+   order-service:
+      image: order-service:1
+      container_name: order-service
+      build: ./order-service
+      ports: 
+         - "60063:60063"
+      restart: on-failure
+      depends_on:
+         - cassandra-node1
+      networks:
+         - online-marketplace-network
+
+   # grpc-gateway service
+   grpc-gateway:
+      image: grpc-gateway:1
+      container_name: grpc-gateway
+      build: ./grpc-gateway
+      ports: 
+         - "8081:8081"
+      restart: on-failure
+      depends_on:
+         - product-service
+         - customer-service
+         - payment-service
+         - order-service
+      networks:
+         - online-marketplace-network
+
+
+   # KrakenD API Gateway
+   krakend-api-gateway:
+      #image: devopsfaith/krakend:1.1-alpine
+      image: devopsfaith/krakend:1.2.0
+      container_name: krakend-api-gateway
+      volumes:
+         - ./grpc-gateway/etc/krakend/krakend.json:/etc/krakend/krakend.json
+         - ./grpc-gateway/plugin:/plugin
+      ports:
+         - "8000:8000" 
+         - "8090:8090"     
+      restart: on-failure
+      depends_on:
+         - product-service
+         - customer-service
+         - payment-service
+         - order-service
+         - grpc-gateway
+      networks:
+         - online-marketplace-network
+
+# Networks to be created to facilitate communication between containers
+networks:
+   online-marketplace-network:
+      driver: bridge

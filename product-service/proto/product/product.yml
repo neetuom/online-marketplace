@@ -1,0 +1,44 @@
+--- 
+    config_version: 3
+    http: 
+      rules: 
+        - 
+          body: "*"
+          post: /v1/product/addproduct
+          selector: product.ProductService.AddProduct
+        -           
+          # Syntax 1 :- 
+          # post: /v1/product/updateproduct/{productID}/{price}
+          # http://localhost:8080/v1/product/updateproduct/Moto-G6/20000
+
+          # Syntax 2 :- 
+          # post: /v1/product/updateproduct
+          # http://localhost:8080/v1/product/updateproduct
+        
+          body: "*"
+          # put: /v1/product/updateproduct              # HTTP Put method update the complete resource.
+          patch: /v1/product/updateproduct
+          selector: product.ProductService.UpdateProduct
+        - 
+          # Syntax 1 :- 
+          # POST: /v1/product/deleteproduct/{deleted}
+          # http://localhost:8080/v1/product/deleteproduct/Moto-G6
+
+          # Syntax 2 :- 
+          # POST: /v1/product/deleteproduct/
+          # http://localhost:8080/v1/product/deleteproduct
+         
+          # Syntax 3 :- 
+          # DELETE: /v1/product/deleteproduct/
+          # http://localhost:8080/v1/product/deleteproduct/Moto-G6
+
+          delete: /v1/product/deleteproduct/{productID}
+          selector: product.ProductService.DeleteProduct
+        - 
+          get: /v1/product/getproductlist
+          selector: product.ProductService.GetProductList
+        - 
+          get: /v1/product/getproductbyid/{productID}
+          selector: product.ProductService.GetProductByID
+    type: google.api.Service
+    
